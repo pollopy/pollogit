@@ -1,0 +1,35 @@
+{
+  "name": "综合功能性训练计划",
+  "short_name": "训练计划",
+  "description": "网球专项功能训练 · 跟练计时器 · 动作详解",
+  "start_url": "./训练计划.html",
+  "display": "standalone",
+  "background_color": "#0d1117",
+  "theme_color": "#58a6ff",
+  "orientation": "portrait-primary",
+  "lang": "zh-CN",
+  "categories": ["health", "fitness", "sports"],
+  "icons": [
+    {
+      "src": "./icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "./icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "周一 · 臀链下肢",
+      "short_name": "Day A",
+      "description": "臀链 & 下肢功能日",
+      "url": "./训练计划.html#plan"
+    }
+  ]
+}
