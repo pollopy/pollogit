@@ -6,6 +6,40 @@
 <title>AI 工作建议 · 结论与建议整合版 0529</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--border:#2e3248;--text:#e2e8f0;--muted:#8891b0;--accent:#7c6ff7;--green:#4ade80;--yellow:#facc15;--red:#f87171;--blue:#58a6ff;--purple:#bc8cff}*{box-sizing:border-box;margin:0;padding:0}body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','PingFang SC','Hiragino Sans GB',sans-serif;background:var(--bg);color:var(--text);line-height:1.75;font-size:15px}.page-header{position:sticky;top:0;z-index:20;background:rgba(15,17,23,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--border);padding:22px 20px}.page-header-inner{max-width:980px;margin:0 auto}.page-header h1{font-size:22px;font-weight:700;color:#fff}.page-header p{margin-top:6px;color:var(--muted);font-size:13px}.source-nav{display:flex;gap:8px;overflow-x:auto;margin-top:14px;padding-bottom:2px}.source-nav a{flex-shrink:0;text-decoration:none;color:var(--muted);border:1px solid var(--border);background:var(--surface);border-radius:999px;padding:5px 12px;font-size:12px}.source-nav a:hover{color:#fff;border-color:var(--accent)}main{max-width:980px;margin:0 auto;padding:26px 16px 60px}.source-section{background:var(--surface);border:1px solid var(--border);border-radius:14px;margin-bottom:28px;overflow:hidden;padding:22px}.source-kicker{margin:-22px -22px 22px;padding:12px 18px;background:var(--surface2);border-bottom:1px solid var(--border);color:var(--accent);font-size:13px;font-weight:700;letter-spacing:.03em}.section{margin-bottom:28px}.section-title,.sc h2,.card-body h2{color:var(--accent);font-size:17px;margin:20px 0 12px}.sc h1,.source-section>h1,.card-body h1{font-size:16px;font-weight:700;color:#fff;margin:26px 0 12px;padding:10px 14px;border-radius:8px;background:var(--surface2);border-left:4px solid var(--accent)}h2{font-size:18px;color:#fff;margin:22px 0 10px}h3{font-size:15px;color:#c8d0e8;margin:16px 0 8px}h4{font-size:14px;color:#c8d0e8;margin:12px 0 6px}p{margin:7px 0;color:#d1d9ef}ul,ol{padding-left:22px;margin:8px 0}li{margin:4px 0;color:#d1d9ef}strong{color:#fff}hr,.divider,.sec-hr{border:none;border-top:1px solid var(--border);margin:24px 0}.matrix{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:720px){.matrix{grid-template-columns:1fr}.source-section{padding:16px}.source-kicker{margin:-16px -16px 16px}.page-header{position:static}}.quadrant,.future-card,.pipeline,.template-box,.warning-box,.insight-box,.item,.sc,.card,.cx,.wt{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:12px}.quadrant.q1{border-top:3px solid var(--red)}.quadrant.q2{border-top:3px solid var(--blue)}.quadrant.q3{border-top:3px solid var(--yellow)}.quadrant.q4{border-top:3px solid var(--muted)}.quadrant-label,.fc-label,.tpl-label,.w-label,.i-label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.06em;text-transform:uppercase}.quadrant-title{font-weight:700;color:#fff;margin:4px 0 10px}.item-title{font-weight:700;color:#fff;margin-bottom:4px}.item-desc,.item-tag,.pipeline-desc,.step-detail,.future-card p{color:var(--muted);font-size:13px}.item-tag,.roi-tag{display:inline-block;margin:6px 6px 0 0;padding:2px 7px;border-radius:6px;border:1px solid var(--border);font-size:12px}.tag-time,.roi-high,.roi-h{color:var(--green)}.tag-cost,.roi-low,.roi-l{color:var(--red)}.tag-roi,.text-accent{color:var(--blue)}.roi-m{color:var(--yellow)}.future-grid,.agent-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}@media(max-width:720px){.future-grid,.agent-grid{grid-template-columns:1fr}}.tbl-wrap{overflow-x:auto;margin:14px 0 22px;border-radius:10px;border:1px solid var(--border)}table.data-tbl{width:100%;border-collapse:collapse;font-size:13px}table.data-tbl th{background:var(--surface2);color:#a0aec0;font-weight:700;padding:10px 14px;text-align:left;border-bottom:1px solid var(--border);white-space:nowrap}table.data-tbl td{padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.06);color:#d1d9ef;vertical-align:top}table.data-tbl tr:last-child td{border-bottom:none}blockquote.bq,blockquote{margin:12px 0;padding:12px 16px;border-left:3px solid var(--accent);background:var(--surface2);border-radius:0 8px 8px 0;color:#c8d0e8}pre.code-pre,pre{background:#0b0e18;border:1px solid var(--border);border-radius:8px;padding:14px 16px;margin:10px 0 16px;overflow-x:auto}code{font-family:'SF Mono','Fira Code','Cascadia Code','Consolas',monospace;font-size:12.5px;color:#8be9fd}.template-text{white-space:pre-wrap;word-break:break-word;font-family:'SF Mono','Monaco','Cascadia Code',monospace;font-size:13px;color:#e6edf3}.num{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;border-radius:50%;background:rgba(124,111,247,.15);color:var(--accent);font-size:12px;margin-right:6px}.footer{max-width:980px;margin:0 auto 40px;padding:18px 16px;color:var(--muted);font-size:12px;text-align:center;border-top:1px solid var(--border)}
+
+
+/* === Mobile overflow fix · added by ChatGPT === */
+html,body{width:100%;max-width:100%;overflow-x:hidden}body{-webkit-text-size-adjust:100%;text-size-adjust:100%}img,video,canvas,svg,iframe{max-width:100%;height:auto}main,.page-header-inner,.footer,.source-section,.section,.quadrant,.future-card,.pipeline,.template-box,.warning-box,.insight-box,.item,.sc,.card,.cx,.wt{min-width:0;max-width:100%}p,li,h1,h2,h3,h4,.item-title,.item-desc,.template-text,.step-detail,.pipeline-desc,blockquote{overflow-wrap:anywhere;word-break:break-word}.source-nav{-webkit-overflow-scrolling:touch;scrollbar-width:thin}.tbl-wrap,pre.code-pre,pre{max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch}.tbl-wrap{overscroll-behavior-x:contain}table.data-tbl{width:max-content;min-width:100%;max-width:none}table.data-tbl th,table.data-tbl td{white-space:normal;overflow-wrap:anywhere;word-break:break-word;min-width:88px}.section>div[style*="grid-template-columns:1fr 1fr"],.section>div[style*="display:grid"]{min-width:0}.steps,.step,.step-content,.pipeline-header,.bink-steps,.bink-step,.kb-path,.kb-item,.kb-content{min-width:0;max-width:100%}
+@media(max-width:720px){
+  body{font-size:14px;line-height:1.68}
+  .page-header{padding:16px 12px}
+  .page-header h1{font-size:18px;line-height:1.35}
+  .page-header p{font-size:12px;line-height:1.55}
+  main{padding:16px 10px 42px}
+  .source-section{padding:14px;margin-bottom:18px;border-radius:12px;overflow:visible}
+  .source-kicker{margin:-14px -14px 14px;padding:10px 12px;font-size:12px}
+  .section{margin-bottom:20px}
+  .section-title,.sc h2,.card-body h2{font-size:16px;margin:16px 0 10px}
+  .sc h1,.source-section>h1,.card-body h1{font-size:15px;margin:18px 0 10px;padding:9px 10px}
+  h2{font-size:16px}h3{font-size:14px}h4{font-size:13px}
+  .quadrant,.future-card,.pipeline,.template-box,.warning-box,.insight-box,.item,.sc,.card,.cx,.wt{padding:12px;border-radius:9px}
+  .matrix,.future-grid,.agent-grid,.section>div[style*="grid-template-columns:1fr 1fr"]{grid-template-columns:1fr!important;gap:10px!important}
+  .tbl-wrap{margin:10px -2px 18px;border-radius:8px}
+  table.data-tbl{font-size:12px;min-width:640px}
+  table.data-tbl th,table.data-tbl td{padding:8px 10px;min-width:96px}
+  pre.code-pre,pre{padding:12px;margin:8px 0 14px;font-size:12px;white-space:pre;overflow-x:auto}
+  code{font-size:12px}
+  .template-text{font-size:12px;line-height:1.6}
+  .num{min-width:20px;height:20px;font-size:11px;margin-right:5px}
+}
+@media(max-width:420px){
+  main{padding-left:8px;padding-right:8px}
+  .source-section{padding:12px;border-radius:10px}
+  .source-kicker{margin:-12px -12px 12px}
+  table.data-tbl{min-width:560px}
+  .source-nav a{padding:5px 10px;font-size:11px}
+}
+
 </style>
 </head>
 <body>
