@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI赋能工作建议 · 多智能体讨论 · 0529</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #0d1117;
+      --bg2: #161b22;
+      --bg3: #1c2230;
+      --card: #1e2535;
+      --border: #30363d;
+      --text: #c9d1d9;
+      --text2: #8b949e;
+      --accent: #58a6ff;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --red: #f85149;
+      --purple: #bc8cff;
+      --tab-active: #58a6ff;
+    }
+
+    html { font-size: 15px; }
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    /* HEADER */
+    .header {
+      background: var(--bg2);
+      border-bottom: 1px solid var(--border);
+      padding: 20px 24px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-top {
+      display: flex;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .header h1 {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #e6edf3;
+    }
+    .header .meta {
+      font-size: 0.8rem;
+      color: var(--text2);
+    }
+    .badge {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 2px 8px;
+      border-radius: 20px;
+      background: rgba(88,166,255,.15);
+      color: var(--accent);
+      border: 1px solid rgba(88,166,255,.3);
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 0;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .tabs::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 10px 18px;
+      background: none;
+      border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--text2);
+      cursor: pointer;
+      font-size: 0.875rem;
+      white-space: nowrap;
+      transition: all .15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active {
+      color: var(--tab-active);
+      border-bottom-color: var(--tab-active);
+    }
+
+    /* CONTENT */
+    .content {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 28px 20px;
+    }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* SECTION */
+    .section { margin-bottom: 36px; }
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* EISENHOWER MATRIX */
+    .matrix {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 12px;
+    }
+    @media(max-width: 600px) {
+      .matrix { grid-template-columns: 1fr; }
+    }
+    .quadrant {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 18px;
+    }
+    .quadrant.q1 { border-top: 3px solid var(--red); }
+    .quadrant.q2 { border-top: 3px solid var(--accent); }
+    .quadrant.q3 { border-top: 3px solid var(--yellow); }
+    .quadrant.q4 { border-top: 3px solid var(--text2); }
+    .quadrant-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .08em;
+      margin-bottom: 4px;
+    }
+    .q1 .quadrant-label { color: var(--red); }
+    .q2 .quadrant-label { color: var(--accent); }
+    .q3 .quadrant-label { color: var(--yellow); }
+    .q4 .quadrant-label { color: var(--text2); }
+    .quadrant-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin-bottom: 12px;
+    }
+
+    /* ITEM CARDS */
+    .item {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+    }
+    .item:last-child { margin-bottom: 0; }
+    .item-title {
+      font-weight: 600;
+      font-size: 0.9rem;
+      color: #e6edf3;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+    .item-title .num {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      font-size: 0.7rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .q1 .num { background: rgba(248,81,73,.2); color: var(--red); }
+    .q2 .num { background: rgba(88,166,255,.2); color: var(--accent); }
+    .q3 .num { background: rgba(210,153,34,.2); color: var(--yellow); }
+    .q4 .num { background: rgba(139,148,158,.2); color: var(--text2); }
+    .item-desc {
+      font-size: 0.825rem;
+      color: var(--text2);
+      padding-left: 28px;
+      line-height: 1.5;
+    }
+    .item-tag {
+      display: inline-block;
+      font-size: 0.68rem;
+      padding: 1px 6px;
+      border-radius: 4px;
+      margin-top: 5px;
+      margin-left: 28px;
+    }
+    .tag-time { background: rgba(63,185,80,.1); color: var(--green); border: 1px solid rgba(63,185,80,.2); }
+    .tag-cost { background: rgba(248,81,73,.1); color: #f85149; border: 1px solid rgba(248,81,73,.2); }
+    .tag-roi { background: rgba(88,166,255,.1); color: var(--accent); border: 1px solid rgba(88,166,255,.2); }
+
+    /* FUTURE DIRECTIONS */
+    .future-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    @media(max-width: 640px) {
+      .future-grid { grid-template-columns: 1fr; }
+    }
+    .future-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--purple);
+      border-radius: 8px;
+      padding: 16px;
+    }
+    .future-card .fc-label {
+      font-size: 0.7rem;
+      color: var(--purple);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+    .future-card h4 {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin-bottom: 8px;
+    }
+    .future-card p {
+      font-size: 0.825rem;
+      color: var(--text2);
+      line-height: 1.6;
+    }
+    .future-card .now-action {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--green);
+      background: rgba(63,185,80,.08);
+      border: 1px solid rgba(63,185,80,.15);
+      border-radius: 5px;
+      padding: 6px 10px;
+    }
+    .future-card .now-action::before { content: '▶ 现在布局：'; font-weight: 600; }
+
+    /* PIPELINE */
+    .pipeline {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 16px;
+    }
+    .pipeline-header {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .pipeline-badge {
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .badge-strong { background: rgba(248,81,73,.15); color: var(--red); border: 1px solid rgba(248,81,73,.25); }
+    .badge-weak { background: rgba(88,166,255,.15); color: var(--accent); border: 1px solid rgba(88,166,255,.25); }
+    .badge-meta { background: rgba(188,140,255,.15); color: var(--purple); border: 1px solid rgba(188,140,255,.25); }
+    .pipeline h3 { font-size: 0.95rem; font-weight: 600; color: #e6edf3; }
+    .pipeline-desc {
+      font-size: 0.82rem;
+      color: var(--text2);
+      margin-bottom: 14px;
+    }
+    .steps { display: flex; flex-direction: column; gap: 8px; }
+    .step {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .step-num {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: rgba(88,166,255,.15);
+      border: 1px solid rgba(88,166,255,.3);
+      color: var(--accent);
+      font-size: 0.7rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .step-content { flex: 1; }
+    .step-title {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #e6edf3;
+    }
+    .step-time {
+      font-size: 0.72rem;
+      color: var(--green);
+      margin-left: 6px;
+    }
+    .step-detail {
+      font-size: 0.8rem;
+      color: var(--text2);
+      margin-top: 2px;
+      line-height: 1.5;
+    }
+
+    /* TEMPLATE BOX */
+    .template-box {
+      background: #0d1117;
+      border: 1px solid #30363d;
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .template-box .tpl-label {
+      font-size: 0.72rem;
+      color: var(--green);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 8px;
+    }
+    .template-text {
+      font-size: 0.82rem;
+      color: #e6edf3;
+      line-height: 1.65;
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+    .template-text .fill {
+      color: var(--yellow);
+      background: rgba(210,153,34,.1);
+      border-radius: 3px;
+      padding: 0 2px;
+    }
+
+    /* WARNING BOX */
+    .warning-box {
+      background: rgba(248,81,73,.06);
+      border: 1px solid rgba(248,81,73,.2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 10px;
+    }
+    .warning-box .w-label {
+      font-size: 0.72rem;
+      color: var(--red);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+    .warning-box p { font-size: 0.82rem; color: var(--text2); line-height: 1.55; }
+
+    /* INSIGHT BOX */
+    .insight-box {
+      background: rgba(63,185,80,.06);
+      border: 1px solid rgba(63,185,80,.2);
+      border-radius: 8px;
+      padding: 14px 16px;
+      margin-bottom: 12px;
+    }
+    .insight-box .i-label {
+      font-size: 0.72rem;
+      color: var(--green);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      margin-bottom: 6px;
+    }
+    .insight-box p { font-size: 0.85rem; color: var(--text); line-height: 1.6; }
+
+    /* AGENT CARDS */
+    .agent-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media(max-width:640px) {
+      .agent-grid { grid-template-columns: 1fr; }
+    }
+    .agent-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+    }
+    .agent-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      margin-bottom: 12px;
+    }
+    .a1 .agent-icon { background: rgba(248,81,73,.15); }
+    .a2 .agent-icon { background: rgba(88,166,255,.15); }
+    .a3 .agent-icon { background: rgba(63,185,80,.15); }
+    .a4 .agent-icon { background: rgba(210,153,34,.15); }
+    .agent-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin-bottom: 4px;
+    }
+    .agent-card .role-tag {
+      font-size: 0.72rem;
+      color: var(--text2);
+      margin-bottom: 10px;
+    }
+    .agent-card p {
+      font-size: 0.82rem;
+      color: var(--text2);
+      line-height: 1.6;
+      margin-bottom: 10px;
+    }
+    .concern-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .concern-list li {
+      font-size: 0.78rem;
+      color: var(--text2);
+      padding-left: 14px;
+      position: relative;
+    }
+    .concern-list li::before {
+      content: '·';
+      position: absolute;
+      left: 4px;
+      color: var(--accent);
+    }
+
+    /* ROUND TIMELINE */
+    .round {
+      border-left: 2px solid var(--border);
+      padding-left: 20px;
+      margin-left: 8px;
+      margin-bottom: 28px;
+      position: relative;
+    }
+    .round::before {
+      content: '';
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent);
+      border: 2px solid var(--bg);
+      position: absolute;
+      left: -6px;
+      top: 4px;
+    }
+    .round-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin-bottom: 4px;
+    }
+    .round-subtitle {
+      font-size: 0.78rem;
+      color: var(--text2);
+      margin-bottom: 14px;
+    }
+    .agent-section {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 14px;
+      margin-bottom: 10px;
+    }
+    .agent-name {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+    .agent-section ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+    .agent-section li {
+      font-size: 0.82rem;
+      color: var(--text2);
+      padding-left: 14px;
+      position: relative;
+      line-height: 1.5;
+    }
+    .agent-section li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--text2);
+      font-size: 0.7rem;
+    }
+
+    /* CONTEXT */
+    .context-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 14px;
+    }
+    .context-card h3 {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: #e6edf3;
+      margin-bottom: 12px;
+    }
+    .context-card ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .context-card li {
+      font-size: 0.83rem;
+      color: var(--text2);
+      padding-left: 16px;
+      position: relative;
+      line-height: 1.55;
+    }
+    .context-card li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.7rem;
+    }
+    .pct-bar {
+      display: inline-block;
+      height: 3px;
+      border-radius: 2px;
+      background: var(--accent);
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* MISC */
+    .divider {
+      border: none;
+      border-top: 1px solid var(--border);
+      margin: 24px 0;
+    }
+    .text-green { color: var(--green); }
+    .text-red { color: var(--red); }
+    .text-yellow { color: var(--yellow); }
+    .text-purple { color: var(--purple); }
+    .text-accent { color: var(--accent); }
+    .text-dim { color: var(--text2); }
+    .font-mono {
+      font-family: 'SF Mono', 'Monaco', 'Cascadia Code', monospace;
+      font-size: 0.82rem;
+    }
+
+    .roi-tag {
+      display: inline-block;
+      font-size: 0.7rem;
+      padding: 1px 7px;
+      border-radius: 4px;
+      font-weight: 600;
+    }
+    .roi-high { background: rgba(63,185,80,.12); color: var(--green); border: 1px solid rgba(63,185,80,.2); }
+    .roi-med { background: rgba(210,153,34,.12); color: var(--yellow); border: 1px solid rgba(210,153,34,.2); }
+    .roi-low { background: rgba(248,81,73,.12); color: var(--red); border: 1px solid rgba(248,81,73,.2); }
+
+    .bink-steps {
+      counter-reset: bink;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .bink-step {
+      display: flex;
+      gap: 12px;
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 7px;
+      padding: 12px;
+      align-items: flex-start;
+    }
+    .bink-num {
+      background: rgba(210,153,34,.2);
+      color: var(--yellow);
+      border-radius: 5px;
+      padding: 2px 8px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .bink-step p { font-size: 0.82rem; color: var(--text2); line-height: 1.55; }
+    .bink-step strong { color: var(--text); }
+
+    .kb-path {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .kb-item {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+    .kb-day {
+      background: var(--bg3);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 0.72rem;
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      white-space: nowrap;
+      margin-top: 2px;
+    }
+    .kb-content { flex: 1; }
+    .kb-content h4 { font-size: 0.875rem; font-weight: 600; color: #e6edf3; margin-bottom: 3px; }
+    .kb-content p { font-size: 0.8rem; color: var(--text2); line-height: 1.5; }
+
+    .cannot-box {
+      background: rgba(139,148,158,.06);
+      border: 1px solid rgba(139,148,158,.15);
+      border-radius: 8px;
+      padding: 14px 16px;
+    }
+    .cannot-box h4 { font-size: 0.82rem; font-weight: 600; color: var(--text2); margin-bottom: 8px; }
+    .cannot-box ul { list-style: none; display: flex; flex-direction: column; gap: 4px; }
+    .cannot-box li { font-size: 0.8rem; color: var(--text2); padding-left: 14px; position: relative; }
+    .cannot-box li::before { content: '✕'; position: absolute; left: 0; color: var(--text2); font-size: 0.7rem; }
+
+    /* SCROLLBAR */
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+    /* FOOTER */
+    .footer {
+      text-align: center;
+      padding: 32px 20px;
+      color: var(--text2);
+      font-size: 0.78rem;
+      border-top: 1px solid var(--border);
+    }
+  </style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <h1>AI赋能工作建议</h1>
+    <span class="badge">4智能体 · 4轮讨论</span>
+    <span class="meta">游戏UI动效设计师 · 2025.05.29</span>
+  </div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="switchTab('result')">最终结论</button>
+    <button class="tab-btn" onclick="switchTab('suggest')">具体建议</button>
+    <button class="tab-btn" onclick="switchTab('agents')">讨论角色</button>
+    <button class="tab-btn" onclick="switchTab('process')">讨论过程</button>
+    <button class="tab-btn" onclick="switchTab('context')">前情提要</button>
+  </div>
+</div>
+
+<div class="content">
+
+  <!-- ===== TAB 1: 最终结论 ===== -->
+  <div id="tab-result" class="tab-panel active">
+
+    <div class="section">
+      <div class="section-title">优先级矩阵</div>
+      <div class="matrix">
+
+        <!-- Q1: 紧急+重要 -->
+        <div class="quadrant q1">
+          <div class="quadrant-label">紧急 + 重要</div>
+          <div class="quadrant-title">立刻开始 · 本周内</div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">1</span>建LLM技术顾问提问模板文档</div>
+            <div class="item-desc">新建一个 .md 文件，写死4个场景模板（AE表达式/蓝图逻辑/材质节点/UE5预检），本周强制消耗一遍所有模板，校准提问质量。</div>
+            <div class="item-tag tag-time">投入上限 2小时</div>
+            <div class="item-tag tag-roi">零学习成本 · 立即可用</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">2</span>发精准 Bink 推进消息给程序员</div>
+            <div class="item-desc">不泛问"能不能支持"，而是发具体需求："确认Bink插件版本，封装一个UMG组件（播放/暂停/循环/透明度），我提供测试资产，先跑通Alpha通道这条链路"。</div>
+            <div class="item-tag tag-time">30分钟</div>
+            <div class="item-tag tag-roi">最高效率杠杆的卡点清除</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">3</span>建立 UE5 可行性预检习惯</div>
+            <div class="item-desc">AE草稿达到30-70%时，停下来10分钟用预检模板问LLM。升级为强制流程节点，不做完AE再查——那时发现问题代价最高。</div>
+            <div class="item-tag tag-time">零额外时间（替换原有思考环节）</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">4</span>建第一张材质参数卡</div>
+            <div class="item-desc">从当前或最近完成的任意一个 Material 开始，记录：效果名、关键节点截图、可调参数名+范围、适用场景标签。不要先设计模板再填内容，先建一张验证格式够不够用。</div>
+            <div class="item-tag tag-time">今天 · 30分钟</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">5</span>写当前项目的视觉风格语言（精简版）</div>
+            <div class="item-desc">只写三个维度：主色+辅色（色值方向）、一个节奏词（爆发感/弹性/丝滑）、一个质感词（磨砂/金属/光感）。存文件，下次生图时贴上对比对焦效果。</div>
+            <div class="item-tag tag-time">15分钟</div>
+          </div>
+        </div>
+
+        <!-- Q2: 重要+不紧急 -->
+        <div class="quadrant q2">
+          <div class="quadrant-label">重要 + 不紧急</div>
+          <div class="quadrant-title">计划执行 · 月度规划</div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">6</span>项目视觉风格语言文档（完整版）</div>
+            <div class="item-desc">结合下一个强创意项目，花2-3小时提炼：色彩体系、光效类型、运动节奏、质感词汇、禁用元素。用LLM辅助把感性描述转为可操作参数词汇。完成后测试生图对焦率。</div>
+            <div class="item-tag tag-time">单次2-3小时 · 每项目15分钟维护</div>
+            <div class="item-tag tag-roi">高ROI · 所有工具永久受益</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">7</span>材质参数卡库持续积累</div>
+            <div class="item-desc">每个项目完成后附加20分钟。不另开战线，伴随项目自然生长。6个月后覆盖80%常用效果，届时弱创意UE5制作阶段从"搭材质"变"调参数"。</div>
+            <div class="item-tag tag-time">每次20-30分钟</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">8</span>LLM查询固化库</div>
+            <div class="item-desc">每次LLM给出有效蓝图/材质/表达式方案，完成后3-5分钟复制存档。记录：问题描述/LLM答案/实测有效性。高频问题积累到10条后搜索速度远超重新问LLM。</div>
+            <div class="item-tag tag-time">每次3-5分钟</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">9</span>提示词资产库结构化</div>
+            <div class="item-desc">整理现有 NanoBanana 记录，补写3条有效案例的任务类型/成功条件/失败变体。按项目类型分组（PV/首页/付费环节）。只存风格锁定型提示词，不存技巧型（后者有清零风险）。</div>
+            <div class="item-tag tag-time">整理2小时（利用已有记录）</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">10</span>参考收集分层化（发现层自动化）</div>
+            <div class="item-desc">RSS订阅8-12个固定优质来源（Artstation特定艺术家/游戏美术账号），一次性6小时建立上限。不建复杂自动标签系统。筛选层必须保留人工判断。</div>
+            <div class="item-tag tag-time">一次性6小时上限，超过不做</div>
+            <div class="item-tag tag-roi">中ROI</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">11</span>Bink 工作流文档化（落地后）</div>
+            <div class="item-desc">一旦Bink链路跑通，立即文档化全部参数和步骤（AE→ProRes4444→RAD Video Tools→Bink→UE5），建立资产目录规范（/Transitions//Particles//UI_Loops//Premium/）。</div>
+            <div class="item-tag tag-time">落地后1天完成文档</div>
+          </div>
+        </div>
+
+        <!-- Q3: 紧急+不重要 -->
+        <div class="quadrant q3">
+          <div class="quadrant-label">紧急 + 不重要</div>
+          <div class="quadrant-title">快速处理 · 低成本决策</div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">12</span>给参考收集设物理上限</div>
+            <div class="item-desc">现在就决定：RSS源不超过多少个（建议8-12），参考文件夹单月不超过多少条（建议50）。15分钟内写进工具设置。没有上限的系统会持续漏气。</div>
+            <div class="item-tag tag-time">15分钟</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">13</span>Bink 断点记录</div>
+            <div class="item-desc">花20分钟写明：已完成步骤、卡住的具体节点、缺少的是信息/工具/时间中的哪个。把"未完成"从心理负担转成有状态的任务，便于精准推进或求助。</div>
+            <div class="item-tag tag-time">20分钟</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">14</span>设定"趁热捕获"触发条件</div>
+            <div class="item-desc">定一个具体的触发事件，而不是模糊的"做完项目整理"。建议：UE5中出现超过10分钟没解决的问题，解决后立即记录。触发条件越具体，执行率越高。</div>
+            <div class="item-tag tag-time">5分钟决定</div>
+          </div>
+        </div>
+
+        <!-- Q4: 不重要+不紧急 -->
+        <div class="quadrant q4">
+          <div class="quadrant-label">不重要 + 不紧急</div>
+          <div class="quadrant-title">明确放弃 · 不投入</div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">⚠</span>特定生图工具深度调参技巧</div>
+            <div class="item-desc">模型架构每代升级后（Flux→下一代），旧提示词技巧清零率50%+。只需要风格描述能力，不需要工具特异性技巧。</div>
+            <div class="item-tag tag-cost">清零周期 6-12个月</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">⚠</span>AE 脚本系统化深度学习</div>
+            <div class="item-desc">Adobe 正大力推进 Firefly AI 集成，AE自身AI功能在快速扩张。深度学习ExtendScript，会被Adobe自身功能替代。只需会描述需求让LLM生成+验证结果。</div>
+            <div class="item-tag tag-cost">被Adobe AI功能替代风险高</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">⚠</span>Niagara 粒子 AI 辅助探索</div>
+            <div class="item-desc">当前LLM对Niagara粒子参数的理解准确率低，幻觉成本高于帮助。等Epic官方推出更好的Niagara AI辅助工具（已有路线图迹象），届时原生工具质量会远超手工摸索。</div>
+            <div class="item-tag tag-cost">当前LLM支持质量不足</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">⚠</span>视频生成工具提示词深度研究</div>
+            <div class="item-desc">视频生成是整个AI领域变化最快的方向。当前提示词技巧在下一代模型（参考视频驱动/时间轴控制）中可能被完全不同的交互方式替代。迁移率不超过30%。</div>
+            <div class="item-tag tag-cost">清零周期最短</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">⚠</span>UE5 Python 脚本学习</div>
+            <div class="item-desc">对无代码背景用户，学习成本极高。更务实做法：用已有脚本资产，或与开发同事协作。除非有强烈个人意愿，否则ROI为负。</div>
+            <div class="item-tag tag-cost">学习成本过高</div>
+          </div>
+
+          <div class="item">
+            <div class="item-title"><span class="num">⚠</span>复杂 n8n 自动化流程</div>
+            <div class="item-desc">节点接口频繁变更，维护成本持续存在。无代码背景用户，构建复杂流程后维护成本很可能持续超过节省的时间。仅考虑极高频（每周3次+）的重复任务。</div>
+            <div class="item-tag tag-cost">高维护成本</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- FUTURE DIRECTIONS -->
+    <div class="section">
+      <div class="section-title">高上限未来方向（6-12个月布局）</div>
+      <div class="future-grid">
+
+        <div class="future-card">
+          <div class="fc-label">未来方向 A</div>
+          <h4>运动意图直接表达</h4>
+          <p>当前瓶颈：你必须把"弹一下再定住"这类运动感受翻译成技术语言，才能被LLM理解。视频输入驱动运动捕捉的路径正在边缘成熟——上传参考视频片段，LLM直接提取运动曲线输出为AE关键帧或蓝图参数。</p>
+          <div class="now-action">建"运动感参考视频库"（物理运动感：弹跳/拖尾/爆炸/液态），工具到位时直接激活。</div>
+        </div>
+
+        <div class="future-card">
+          <div class="fc-label">未来方向 B</div>
+          <h4>视频生成直接进 UE5 资产管线</h4>
+          <p>Sora/Veo 下一步不是质量提升，而是输出格式工程化——带深度图、带Alpha、带运动矢量的视频资产直接对接游戏引擎。你现在推进的 Bink 流程正好是这条管线的前置理解，底层逻辑相同。</p>
+          <div class="now-action">跑通 Bink 流程，深度理解视频资产进引擎的每个技术卡点。</div>
+        </div>
+
+        <div class="future-card">
+          <div class="fc-label">未来方向 C</div>
+          <h4>实时生成式材质 + Shader 辅助</h4>
+          <p>NVIDIA RTX 方向与 Unreal 自身 AI-assisted Material 工具正在把"描述效果 → 可运行 Shader"的路径打通。你现有的材质参数卡和效果描述经验，将直接成为驾驭这类工具的核心资产。</p>
+          <div class="now-action">积累材质参数卡时，重点记录效果的语言描述而不只是参数数值——这是未来 prompt 的训练数据。</div>
+        </div>
+
+        <div class="future-card">
+          <div class="fc-label">未来方向 D</div>
+          <h4>个人风格语言体系外化</h4>
+          <p>你在多个项目中反复出现的视觉决策（色彩判断逻辑、动效节奏偏好、3D质感取舍原则），一旦显式化成文字，可以作为提示词基础、LLM上下文、个人方法论乃至个人品牌——也可能是未来个人模型微调的原材料。</p>
+          <div class="now-action">每完成一个强创意项目，写100字以内："这次的核心判断是什么"。不求完整，只求诚实。</div>
+        </div>
+
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- FINAL WARNING -->
+    <div class="section">
+      <div class="section-title">最终警告</div>
+      <div class="warning-box">
+        <div class="w-label">审计官最终警告</div>
+        <p>你最容易掉入的陷阱：<strong style="color:#e6edf3">把"工具探索"计入工作学习时间</strong>。</p>
+        <br>
+        <p>你的绩效和晋升由强创意工作的产出质量决定（30%内容/50%时长）。每当一个新AI工具出现，它会以"工作相关"为名消耗你的强创意时间，而AI工具给你带来真实ROI的场景非常具体（技术预检/风格锁定/参数文档化），单次收益不如"我用AI生成了一段很酷的视频"那么直观。</p>
+        <br>
+        <p style="color:#e6edf3"><strong>判断标准只有一个：这个工具能直接作用于网站首页/PV/3D综合方案的交付质量吗？能的话投入，不能的话列入观察，6个月后再看。</strong></p>
+      </div>
+
+      <div class="insight-box">
+        <div class="i-label">创意总监最终判断</div>
+        <p>你这个工种的天花板不由工具决定，由你对"什么是好的运动设计"的判断力决定。AI把执行成本压低之后，你的判断力会被放大，而不是被稀释——前提是你没有把培养判断力的时间拿去学工具操作。</p>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== TAB 2: 具体建议 ===== -->
+  <div id="tab-suggest" class="tab-panel">
+
+    <div class="section">
+      <div class="section-title">LLM 技术顾问标准化提问模板</div>
+      <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px">将以下模板存入本地文档，遇到对应场景直接复制填空，不要每次重新组织语言。</p>
+
+      <div class="template-box">
+        <div class="tpl-label">模板 1 · AE 表达式生成</div>
+        <div class="template-text">我需要一个 After Effects 表达式，实现 <span class="fill">[具体行为描述]</span>，作用在 <span class="fill">[图层属性名，如 Position/Opacity/Scale]</span> 上，<span class="fill">[输入条件]</span>，<span class="fill">[约束条件]</span>。直接给我 ExtendScript 表达式代码，不需要解释。</div>
+      </div>
+
+      <div class="template-box">
+        <div class="tpl-label">模板 2 · UE5 蓝图逻辑咨询</div>
+        <div class="template-text">在 UE5 UMG 中，我需要实现 <span class="fill">[效果描述]</span>，触发条件是 <span class="fill">[事件/条件]</span>。请列出需要的蓝图节点和连接逻辑，不需要详细解释，用步骤列表呈现。</div>
+      </div>
+
+      <div class="template-box">
+        <div class="tpl-label">模板 3 · 材质节点方案</div>
+        <div class="template-text">UE5 Material Editor 中，实现 <span class="fill">[效果名/描述]</span> 需要哪些关键节点？请给出节点列表和主要参数设置，不需要写代码。已有节点：<span class="fill">[如有]</span>。</div>
+      </div>
+
+      <div class="template-box">
+        <div class="tpl-label">模板 4 · UE5 可行性预检</div>
+        <div class="template-text">我计划把以下 AE 效果还原到 UE5 UMG 中：<span class="fill">[效果描述+截图描述]</span>。请评估：实现路径选择（Material/Animation/Bink/蓝图）、主要技术限制、预估实现难度（高/中/低）、有没有明显不可行的部分。</div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- PIPELINES -->
+    <div class="section">
+      <div class="section-title">整合型工作流 Pipeline</div>
+
+      <!-- Pipeline A -->
+      <div class="pipeline">
+        <div class="pipeline-header">
+          <span class="pipeline-badge badge-strong">强创意</span>
+          <h3>Pipeline A · 视觉方向快速验证管道</h3>
+        </div>
+        <div class="pipeline-desc">适用：网站首页视觉方案、PV、重要付费环节。解决"方向验证"瓶颈，把模糊想法变成有说服力的可视化证据。目标：将"方向验证草稿"阶段从2-3天压缩到4-6小时。</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">风格语言激活 <span class="step-time">15分钟</span></div>
+              <div class="step-detail">从风格语言文档提取3个风格关键词+2个颜色指向+1个运动感受词（要具体：不是"科技感"，而是"冷蓝+金属溢光+惯性缓动"）。生成10-20帧静帧方向图，目的是锁定"光感和色彩结构对了"的参考帧。</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">关键帧提取 + 结构拆解 <span class="step-time">20分钟</span></div>
+              <div class="step-detail">人工挑出2-3张"感觉对了"的帧（不可跳过，这是创意判断时刻）。用 Claude 把图像描述成AE可执行结构语言：「把这个画面拆解成AE层结构，告诉我需要哪些层类型、每层的运动轨迹、哪些效果适合AE原生插件完成。」</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">AE 草稿 + LLM 辅助 <span class="step-time">40-60分钟</span></div>
+              <div class="step-detail">按Step 2的结构起层。LLM全程待命做两件事：① 表达式按需生成（遇到任何"这个表达式我要想一下"立即口述给Claude，30秒内得到可粘贴代码）；② 缓动效果按需生成（wiggle/elastic/bounce等效果直接口述）。AI处理执行，设计师负责所有节奏和视觉决策。</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <div class="step-title">UE5 可行性预检 <span class="step-time">10分钟（草稿70%时执行）</span></div>
+              <div class="step-detail">截图发给LLM问：「这个发光层是AE Optical Flares，有大量半透明叠加层，UE5 UMG中还原的主要瓶颈在哪？Bink能完全绕过这个问题吗？」→ 如果Bink能解决，继续做AE准备导出；如果需要UE5原生制作，现在就启动规划，不是最后才发现。</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">5</div>
+            <div class="step-content">
+              <div class="step-title">Bink 导出 <span class="step-time">（Bink方案落地后启用）</span></div>
+              <div class="step-detail">AE渲染带Alpha序列帧 → RAD Video Tools转Bink（GUI操作，选"Include Alpha"，质量80-85%）→ 导入UE5 Content/Videos/ → 拖入BinkPlayer UMG组件。AE草稿即是可进UE5的资产，消除重复制作环节。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipeline B -->
+      <div class="pipeline">
+        <div class="pipeline-header">
+          <span class="pipeline-badge badge-weak">弱创意</span>
+          <h3>Pipeline B · 规范化执行加速管道</h3>
+        </div>
+        <div class="pipeline-desc">适用：常规UI动效、标准转场、已有风格规范内的新需求。将心智负担从"我要想怎么实现"降低到"我要确认怎么实现"。长期每周节省5-8小时。</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">需求分类 + LLM 预检 <span class="step-time">10分钟</span></div>
+              <div class="step-detail">用UE5预检模板确认效果类型/推荐实现路径（Material/Animation/Bink/蓝图）/预估工时。拦截"在UMG里做Niagara实时粒子跟随"这类高成本方案，改为Bink播放。</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">材质参数卡检索 <span class="step-time">5分钟</span></div>
+              <div class="step-detail">从材质卡库检索最近似模板，改参数而不是从零搭建。库累积到30-40张卡后，弱创意UE5制作阶段80%需求可直接调用。</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">UE5 制作 + LLM 顾问 <span class="step-time">按需</span></div>
+              <div class="step-detail">材质效果：口述需求给LLM得到节点清单，对照清单连线；蓝图逻辑：口述需求得到节点列表，照着拼接。每次LLM给的节点名称在不同UE5版本有轻微差异，遇到找不到的节点先搜索近似名。</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">4</div>
+            <div class="step-content">
+              <div class="step-title">归档入库 <span class="step-time">15分钟</span></div>
+              <div class="step-detail">成功的材质截图+参数描述+成功条件→材质卡库；成功的蓝图逻辑截图+说明→LLM查询固化库；有效提示词→提示词资产库（按标签分类）。这是整个系统的"充电环节"。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pipeline C -->
+      <div class="pipeline">
+        <div class="pipeline-header">
+          <span class="pipeline-badge badge-strong">强创意</span>
+          <h3>Pipeline C · 3D综合方案风格锁定管道</h3>
+        </div>
+        <div class="pipeline-desc">适用：3D概念综合大型方案（Blender+UE5）。解决大型方案最常见的死法："做了很久，评审时被说方向不对"。把方向偏移代价从三天白费降低到半天调整。</div>
+        <div class="steps">
+          <div class="step">
+            <div class="step-num">1</div>
+            <div class="step-content">
+              <div class="step-title">建视觉锚文档 <span class="step-time">30分钟（每个大方案一次）</span></div>
+              <div class="step-detail">用Claude结构化问答：「我正在设计[游戏功能]的3D视觉方案，风格参考词：[词1/词2/词3]。请帮我生成视觉锚文档，包含：色彩范围限定（主色/强调色/禁用色）、材质质感描述（金属感/透明度/粗糙度方向）、运动节奏描述（快慢分布/停顿感/冲击帧时长）、禁用元素清单。」</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">2</div>
+            <div class="step-content">
+              <div class="step-title">Blender + 生图双轨并行</div>
+              <div class="step-detail">Blender做几何和灯光结构时，同步用生图工具做"同风格静帧参考"。不是用AI替代Blender的建模，而是在建大型结构的同时，保持对"最终应该长什么样"的视觉锚。防止在Blender里花三天做了精细但方向偏了的东西。</div>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-num">3</div>
+            <div class="step-content">
+              <div class="step-title">风格一致性复核 <span class="step-time">每工作日10分钟</span></div>
+              <div class="step-detail">把当前进度截图发给Claude，附上视觉锚文档，问：「对照这份视觉锚文档，当前截图里哪些元素已经偏离了？」Claude做参数比对（"背景色温偏暖，与主色冷蓝有冲突"），不是创意判断而是标准检查。</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- BINK -->
+    <div class="section">
+      <div class="section-title">Bink 方案最小可行推进路径</div>
+      <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px">Bink是当前最大效率杠杆，且是唯一不依赖AI工具的结构性效率提升。以下是非技术人员视角的推进步骤。</p>
+
+      <div class="bink-steps">
+        <div class="bink-step">
+          <div class="bink-num">Step 1</div>
+          <p><strong>向程序员发精准需求（发送以下描述）：</strong>「我需要在 UMG 里播放带 Alpha 的视频，方案是 ProRes4444 转 Bink。你这边需要做：① 确认 Bink 插件版本（UE5已内置，无额外授权费）；② 封装一个 UMG Widget，暴露参数：视频文件引用、自动播放开关、循环播放开关、播放速率、播放/暂停函数。我这边负责转码和测试资产。当前卡在哪个环节？」</p>
+        </div>
+        <div class="bink-step">
+          <div class="bink-num">Step 2</div>
+          <p><strong>设计师备好测试资产：</strong>在 AE 里导出5-10秒动效，格式 QuickTime + ProRes 4444（带Alpha）。下载 RAD Video Tools（免费 GUI，不需要写代码），转为 Bink 格式，勾选"Include Alpha"，质量设置80-85%。文件控制在50MB以内用于测试。</p>
+        </div>
+        <div class="bink-step">
+          <div class="bink-num">Step 3</div>
+          <p><strong>验证4个关键问题：</strong>① Alpha通道是否正确透出（在有背景的UMG里测试）；② 播放帧率稳定性（实际帧率是否匹配原始素材）；③ 是否支持在 Animation Timeline 里控制播放起止；④ 在不同背景色下Alpha是否都正常（Straight Alpha vs 预乘Alpha问题）。</p>
+        </div>
+        <div class="bink-step">
+          <div class="bink-num">Step 4</div>
+          <p><strong>流程跑通后立即文档化：</strong>AE → QuickTime ProRes4444 → RAD Video Tools（Include Alpha，质量80-85%）→ .bk2 → UE5 Content/Videos/ → BinkPlayer组件。建立资产目录：/Transitions/ /Particles/ /UI_Loops/ /Premium/。</p>
+        </div>
+      </div>
+
+      <div class="warning-box" style="margin-top:12px">
+        <div class="w-label">推进阻力应对</div>
+        <p>程序员说"要授权费"→ Bink在UE5内已包含，无额外授权费；RAD Video Tools编码器免费。程序员排期紧→ Step 1只需1-2天，可在碎片时间处理；设计师先自己把转码流程跑通。Alpha有锯齿→ 检查AE导出时是否选择"直通Alpha（Straight Alpha）"而不是预乘Alpha。</p>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- KNOWLEDGE ASSET PATH -->
+    <div class="section">
+      <div class="section-title">知识资产建设路径图</div>
+      <p style="font-size:.83rem;color:var(--text2);margin-bottom:14px">原则：伴随式建立，不另开战线。任何单次专项投入不超过3小时。</p>
+
+      <div class="kb-path">
+        <div class="kb-item">
+          <div class="kb-day">第0天立即</div>
+          <div class="kb-content">
+            <h4>材质参数卡 + LLM查询固化库</h4>
+            <p>启动成本0小时，伴随下一个UE5项目自然开始。材质卡：完成后20-30分钟记录参数截图+设计友好说明。固化库：每次LLM给出有效方案，3-5分钟复制+有效性标注。这是最小可行系统，单独运行6个月也有可感知收益。</p>
+          </div>
+        </div>
+        <div class="kb-item">
+          <div class="kb-day">第2-4周</div>
+          <div class="kb-content">
+            <h4>提示词资产库结构化</h4>
+            <p>整理已有NanoBanana记录（已有基础！），补写任务类型/成功条件/失败变体，按项目类型分组（PV/首页/付费环节）。2小时整理时间，不需要重新建库。只存风格锁定型提示词，不存工具特异性调参技巧。</p>
+          </div>
+        </div>
+        <div class="kb-item">
+          <div class="kb-day">第6-8周</div>
+          <div class="kb-content">
+            <h4>项目风格语言文档</h4>
+            <p>选一个正在进行的典型项目作为"首个风格文档项目"，花2-3小时提炼色调/光影/节奏/禁忌元素。让LLM把感性描述转化为可操作参数词汇。完成后用文档生图测试对焦率。</p>
+          </div>
+        </div>
+        <div class="kb-item">
+          <div class="kb-day">第8-12周</div>
+          <div class="kb-content">
+            <h4>AE 脚本库自然积累可用密度</h4>
+            <p>每次LLM生成有效表达式，测试通过后保存到本地文件夹（文件名=效果描述）。完全不需要专项投入，每次5分钟，积累15-20条后检索速度远超重新问LLM。</p>
+          </div>
+        </div>
+        <div class="kb-item">
+          <div class="kb-day">第3个月末</div>
+          <div class="kb-content">
+            <h4>首次季度知识提炼（2小时）</h4>
+            <p>将本季度积累的碎片条目喂给LLM，输出：高频问题总结/可标准化的模板/需要淘汰的旧方案。碎片知识升级为系统文档。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- DRAFT AI INVOLVEMENT -->
+    <div class="section">
+      <div class="section-title">草稿阶段 AI 介入分层协议</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div class="insight-box" style="margin-bottom:0">
+          <div class="i-label">Type A · 沟通草稿（给他人看）</div>
+          <p>目的：让策划/主美/PM理解方向，推动决策。<br><br>
+          AI深度辅助：大量调用AE模板、LLM生成常用表达式、脚本自动化重复操作（批量调参/导出规格）。<br><br>
+          判断：这类草稿时间投入与创意回报比低，标准化合理，节省30-40%制作时间。</p>
+        </div>
+        <div class="insight-box" style="margin-bottom:0;border-color:rgba(88,166,255,.2);background:rgba(88,166,255,.04)">
+          <div class="i-label" style="color:var(--accent)">Type B · 探索草稿（给自己看）</div>
+          <p>目的：探索方向、验证直觉、突破预设。<br><br>
+          保持AE完全自由，不做任何标准化。AI的作用仅是"辅助执行已有想法"——"我知道要做什么但不知道怎么写"时按需咨询。<br><br>
+          绝不用AI替代创意决策：节奏判断/缓动选择/停顿设计必须由设计师做。</p>
+        </div>
+      </div>
+      <p style="font-size:.8rem;color:var(--text2);margin-top:10px">判断方法：这个草稿的第一读者是自己还是他人？是为了发现可能性还是确认方向？10分钟在项目开始时做一次判断，然后进入对应模式。</p>
+    </div>
+
+    <hr class="divider">
+
+    <!-- CANNOT SOLVE -->
+    <div class="section">
+      <div class="section-title">AI 暂时无法解决的边界</div>
+      <div class="cannot-box">
+        <h4>以下场景不要依赖AI，会浪费时间</h4>
+        <ul>
+          <li>Niagara 粒子行为设计——LLM幻觉成本高于帮助，等Epic原生工具</li>
+          <li>UE5 实时 Bug 调试（性能问题/运行时崩溃/平台兼容）——找程序员</li>
+          <li>多职能说服力 Demo——仍需设计师主导，没有捷径</li>
+          <li>AE → UE5 自动桥接——Bink是目前唯一可行方案</li>
+          <li>创意方向判断——AI可以快速具象化你描述的东西，但判断"这个方向好不好"必须是你做</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== TAB 3: 讨论角色 ===== -->
+  <div id="tab-agents" class="tab-panel">
+    <div class="section">
+      <div class="section-title">四位讨论智能体</div>
+      <div class="agent-grid">
+
+        <div class="agent-card a1">
+          <div class="agent-icon">🎨</div>
+          <h3>动态创意总监</h3>
+          <div class="role-tag">代表：动态设计创意视角</div>
+          <p>资深游戏动态视觉设计师立场。对风格稀缺度、创意自由度、视觉品质有高标准，最担心流水线化导致作品同质化。承认效率重要，但核心关切是AI辅助而不是替代创意。</p>
+          <ul class="concern-list">
+            <li>AE草稿阶段的创意自由度不能被标准化侵蚀</li>
+            <li>运动节奏和视觉决策必须由设计师主导</li>
+            <li>AI的边界是执行，不是决策</li>
+            <li>UE5可行性预检应升级为强制流程节点</li>
+          </ul>
+        </div>
+
+        <div class="agent-card a2">
+          <div class="agent-icon">⚙️</div>
+          <h3>技术落地工程师</h3>
+          <div class="role-tag">代表：UE5技术实现视角</div>
+          <p>专注技术可行性评估和工作流可落地性。最关心方案是否真的能在UE5里跑起来，流程是否可重复、可维护。会质疑听起来美好但落地困难的建议。了解UMG/Animation/Shader/Niagara的能力边界。</p>
+          <ul class="concern-list">
+            <li>Bink是当前最值得推进的单个技术项</li>
+            <li>所有技术方案需要明确卡点和推进步骤</li>
+            <li>LLM节点方案需要"快速验证"意识，先连核心参数再补细节</li>
+            <li>分层架构：创意层不标准化，执行层可标准化</li>
+          </ul>
+        </div>
+
+        <div class="agent-card a3">
+          <div class="agent-icon">🏗️</div>
+          <h3>效率系统架构师</h3>
+          <div class="role-tag">代表：系统化效率视角</div>
+          <p>擅长识别工作流中的摩擦点，设计可重复利用的系统，建立知识资产库。相信大多数"慢"都来自系统缺失而不是个人能力不足。推崇用少量前期投入构建持续产出的飞轮，偏好系统化、模板化、资产化方案。</p>
+          <ul class="concern-list">
+            <li>最小可行系统优先：第0天就能开始的两个库</li>
+            <li>伴随式建立原则：知识库随项目自然生长</li>
+            <li>参考收集三层架构：发现层/筛选层/调用层分别对待</li>
+            <li>草稿类型区分（沟通/探索）解决了创意派与技术派的本质分歧</li>
+          </ul>
+        </div>
+
+        <div class="agent-card a4">
+          <div class="agent-icon">📊</div>
+          <h3>成本效益审计官</h3>
+          <div class="role-tag">代表：ROI与可持续性视角</div>
+          <p>专注评估AI工具和工作流的学习成本、使用成本、投入产出比和可持续性。识别"低价值学习陷阱"——那些听起来有用但很可能在工具升级中被直接清零的学习投入。优先推荐那些越用越有价值、知识可迁移、不会被工具版本迭代清零的技能。</p>
+          <ul class="concern-list">
+            <li>风格语言文档是最高ROI投资（不依赖任何工具）</li>
+            <li>蓝图逻辑"拼乐高"是随时间递增价值的元能力</li>
+            <li>工具探索最容易冒充"工作学习"消耗强创意时间</li>
+            <li>每个投入都需要设定明确的时间上限</li>
+          </ul>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 4: 讨论过程 ===== -->
+  <div id="tab-process" class="tab-panel">
+
+    <div class="round">
+      <div class="round-title">第一轮：各方独立识别痛点</div>
+      <div class="round-subtitle">任务：各agent从自身视角独立列出3+个工作痛点/瓶颈</div>
+
+      <div class="agent-section">
+        <div class="agent-name">动态创意总监</div>
+        <ul>
+          <li>参考收集耗时高，大量时间花在筛选不合适的参考上</li>
+          <li>强创意工作的"方向验证草稿"阶段效率低：从想法到可视化之间的摩擦过大</li>
+          <li>AI生图缺乏对项目风格的精准理解，每次都要重新校准</li>
+          <li>UE5还原阶段是主要时间黑洞，但目前AE和UE5是两套独立劳动</li>
+          <li>Bink方案是打通两套工作流的关键，但推进卡住了</li>
+        </ul>
+      </div>
+
+      <div class="agent-section">
+        <div class="agent-name">技术落地工程师</div>
+        <ul>
+          <li>UE5蓝图逻辑卡点频繁，每次从零查文档耗时长</li>
+          <li>Material节点每次从零搭建，缺乏可复用文档</li>
+          <li>AE设计完成后才发现UE5还原代价极高，方向返工成本最大</li>
+          <li>AE→UE5工作流断裂：两个软件之间没有资产桥接机制</li>
+          <li>LLM对UE5技术的支持潜力大，但没有形成标准化使用习惯</li>
+        </ul>
+      </div>
+
+      <div class="agent-section">
+        <div class="agent-name">效率系统架构师</div>
+        <ul>
+          <li>每个项目都从零开始：参考收集/材质搭建/蓝图逻辑无法积累复用</li>
+          <li>提示词每次重新摸索，生图结果随机性高</li>
+          <li>工具选择决策成本高：每次都要重新判断用哪个工具完成哪个任务</li>
+          <li>弱创意工作量大但缺乏标准化流程，同类工作难以加速</li>
+          <li>日常零散解决的问题没有积累机制，同类问题反复出现</li>
+        </ul>
+      </div>
+
+      <div class="agent-section">
+        <div class="agent-name">成本效益审计官</div>
+        <ul>
+          <li>AI工具探索投入难以评估ROI：哪些值得深学，哪些很快会被工具升级清零</li>
+          <li>强创意工作时间（决定绩效）容易被工具探索侵占</li>
+          <li>提示词调参的学习成本高，且依赖特定模型版本，迁移性差</li>
+          <li>Bink方案推进卡住，是当前ROI最高的未落地项</li>
+          <li>参考收集自动化的投入和收益比尚不明确</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="round">
+      <div class="round-title">第二轮：交叉讨论与方案评估</div>
+      <div class="round-subtitle">任务：各agent评估AI能/不能解决什么，提出具体可执行建议，产生争议</div>
+
+      <div class="agent-section">
+        <div class="agent-name">本轮达成的核心共识</div>
+        <ul>
+          <li><strong>Bink方案</strong>：全员共识最高ROI，是非AI但必须推进的工程任务</li>
+          <li><strong>AE表达式LLM生成</strong>：70-80%直接可用，适合常用表达式和批处理，高信心</li>
+          <li><strong>UE5蓝图"拼乐高"</strong>：描述效果→LLM给节点列表→设计师拼接，10-15分钟解决常见逻辑</li>
+          <li><strong>Material节点生成</strong>：扫光/溶解/Fresnel类效果成功率高，可文档化为材质参数卡</li>
+          <li><strong>UE5可行性预检</strong>：AE草稿阶段10分钟LLM查询，拦截明显不可行方案</li>
+          <li><strong>项目视觉风格语言文档</strong>：锁定风格参数，AI生图精确对焦，系统性工具</li>
+          <li><strong>提示词资产库</strong>：存储成功提示词+上下文标签</li>
+          <li><strong>材质参数卡</strong>：每个Material的设计友好说明文档</li>
+        </ul>
+      </div>
+
+      <div class="agent-section">
+        <div class="agent-name">本轮遗留分歧</div>
+        <ul>
+          <li><strong>参考收集自动化</strong>：效率派认为RSS+自动打标可系统化，品质派认为手工筛选不可替代</li>
+          <li><strong>创意草稿阶段AI介入深度</strong>：技术派偏向AE脚本标准化，创意派坚持AE灵活创意不应标准化</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="round">
+      <div class="round-title">第三轮：整合型Pipeline方案 + 分歧解决</div>
+      <div class="round-subtitle">任务：各agent提出2-3个具体整合型工具链方案，解决第二轮遗留分歧</div>
+
+      <div class="agent-section">
+        <div class="agent-name">分歧最终裁决</div>
+        <ul>
+          <li><strong>参考收集：三层分治</strong>——发现层（RSS，可自动化）/ 筛选层（人工，不可替代）/ 调用层（标签检索，可自动化）。争议消解：品质派守住筛选层，效率派系统化发现层和调用层，互不侵犯。</li>
+          <li><strong>草稿AI介入：类型区分</strong>——沟通草稿（Type A）可标准化调用模板；探索草稿（Type B）保持完全自由。技术派的标准化只针对Type A，创意派的自由空间在Type B完整保留。本质分歧消解。</li>
+          <li><strong>UE5还原阶段</strong>：完全支持LLM深度辅助，无分歧。</li>
+        </ul>
+      </div>
+
+      <div class="agent-section">
+        <div class="agent-name">审计官ROI分层裁决</div>
+        <ul>
+          <li>🟢 高ROI：蓝图"拼乐高"（元能力，随时间增值）/ 风格语言文档（不依赖任何工具）/ UE5预检习惯（零学习成本）/ 材质参数卡（LLM加速建立）</li>
+          <li>🟡 中ROI：提示词资产库（需控制维护成本）/ 工具决策树（有效期6个月）/ Bink推进（工程问题，需设定卡点阈值）</li>
+          <li>🔴 低ROI警告：生图深度调参（清零风险高）/ AE脚本系统化深度学习（被Adobe AI替代）/ Niagara AI辅助（当前质量不足）/ UE5 Python（学习成本过高）</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="round">
+      <div class="round-title">第四轮：最终建议 + 高上限未来方向</div>
+      <div class="round-subtitle">任务：每位agent给出"立即可做"清单 + 2个高天花板未来方向</div>
+
+      <div class="agent-section">
+        <div class="agent-name">四位agent"立即可做"的共同优先项</div>
+        <ul>
+          <li>建LLM技术顾问提问模板文档（4个场景模板，本周强制消耗一遍）</li>
+          <li>向程序员发精准Bink推进消息（最小验证点：确认Alpha通道链路可行）</li>
+          <li>建第一张材质参数卡（今天，从当前项目开始，不要先设计模板再填）</li>
+          <li>建立UE5可行性预检习惯（AE草稿30-70%时执行）</li>
+          <li>Bink断点记录（20分钟，把心理负担转为有状态任务）</li>
+        </ul>
+      </div>
+
+      <div class="agent-section">
+        <div class="agent-name">四位agent共同认可的未来方向</div>
+        <ul>
+          <li><strong>运动意图直接表达</strong>（创意总监/技术工程师）：视频输入驱动运动捕捉，LLM提取运动曲线→AE/蓝图参数，技术在边缘成熟</li>
+          <li><strong>视频生成直接进UE5资产管线</strong>（技术工程师/审计官）：带Alpha/深度图视频资产直接对接游戏引擎，Bink经验是前置理解</li>
+          <li><strong>实时生成式Shader辅助</strong>（技术工程师/审计官）：描述效果→可运行Shader，材质参数卡是前置资产</li>
+          <li><strong>个人风格语言体系外化</strong>（效率架构师/创意总监）：决策过程文档化，成为可授权的个人方法论资产</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ===== TAB 5: 前情提要 ===== -->
+  <div id="tab-context" class="tab-panel">
+
+    <div class="section">
+      <div class="section-title">关于讨论发起者</div>
+      <p style="font-size:.85rem;color:var(--text2);margin-bottom:16px">以下是发起本次多智能体讨论的设计师的工作全景介绍，是所有讨论的前提背景。</p>
+
+      <div class="context-card">
+        <h3>工作性质概述</h3>
+        <ul>
+          <li>游戏视觉动态设计，几乎覆盖全部领域：标题LOGO演绎、PV、HUD动效、所有UI视觉/UX相关视觉概念的动态部分</li>
+          <li>大部分工作在 AE 或 DCC 软件中完成设计，再到 UE5 落地还原</li>
+          <li>很多时候会根据动态创意去反推视觉部分（动态驱动视觉）</li>
+          <li>已配备主流所有AI工具：生图/生视频/生3D工具均完备，工具选型不在讨论范围</li>
+          <li><strong>无代码能力</strong>，不参与代码向工作</li>
+          <li>UE5工作主要通过 UMG / Animation / Shader / Niagara 粒子完成</li>
+          <li>正在推进 Bink（带通道视频）让AI/AE动态资源直接在UE中使用，<strong>未完成</strong></li>
+        </ul>
+      </div>
+
+      <div class="context-card">
+        <h3>强创意设计工作 <span style="color:var(--red);font-size:.8rem">内容占比30% · 工作时长占比50% · 高度决定绩效和晋升</span></h3>
+        <ul>
+          <li>游戏网站首页的视觉方案、PV或游戏宣传动态海报的视觉方案</li>
+          <li>游戏内最需要视觉冲击力的功能：重要转场、抽卡、开宝箱等付费环节</li>
+          <li>3D概念涉及场景/模型/特效/UX多职能协作的综合性大型方案（需要个人完成有完成度的demo）</li>
+          <li>工作流：收集参考(10%) → 设计方向验证草稿(10%) → 正式设计(35%) → UE5还原(35%) → 跟进调试修改(10%) + BUG排查</li>
+          <li>AE为主，也可能直接在UE5蓝图中制作；设计稿确定后在UE5中制作一遍</li>
+        </ul>
+      </div>
+
+      <div class="context-card">
+        <h3>弱创意设计工作 <span style="color:var(--accent);font-size:.8rem">内容占比60% · 工作时长占比40% · 日常主要常规工作</span></h3>
+        <ul>
+          <li>常规UI动效、跟随需求复刻参考风格、量大但创意空间有限的任务</li>
+          <li>工作流：收集参考(20%) → 设计方向验证草稿/前期讨论(10%) → UE5直接制作(40%) → 跟进调试修改(30%) + BUG排查</li>
+        </ul>
+      </div>
+
+      <div class="context-card">
+        <h3>其他工作 <span style="color:var(--text2);font-size:.8rem">10%</span></h3>
+        <ul>
+          <li>整理规范、维护文档</li>
+          <li>日报、周报</li>
+          <li>案例展示、分享</li>
+        </ul>
+      </div>
+
+      <div class="context-card">
+        <h3>AI工具现状</h3>
+        <ul>
+          <li>Claude Code 原生 / VSCode（API接入LLM，支持多模型）/ Claude Cowork客户端 / ChatGPT</li>
+          <li>生图/生视频/生3D工具均已完备，工具选型不在讨论范围</li>
+          <li>讨论范围：选择合适的LLM模型和coding模型如何帮助工作</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<div class="footer">
+  多智能体讨论 · 4轮 · Claude Sonnet 4.6 · 2025.05.29
+</div>
+
+<script>
+  function switchTab(name) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    document.querySelector(`[onclick="switchTab('${name}')"]`).classList.add('active');
+    document.getElementById(`tab-${name}`).classList.add('active');
+  }
+</script>
+</body>
+</html>
